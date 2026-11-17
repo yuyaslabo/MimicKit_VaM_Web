@@ -151,7 +151,7 @@ The build process copies the required MuJoCo WASM and ONNX Runtime WASM/JSEP ass
 | `public/g1_collision.xml` | Simulated humanoid MJCF, contact shapes, inertias and actuators |
 | `public/g1.xml`, `public/meshes/` | Visual-only G1 model assets |
 | `public/vam_env_boxes/` | Registered furniture collision assets |
-| `bridge/` | Windows Bridge source and installer build scripts (when included) |
+| `bridge/` | Windows Bridge source and installer build scripts |
 
 ## Troubleshooting
 
