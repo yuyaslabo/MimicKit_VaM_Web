@@ -1,0 +1,25 @@
+{
+  "name": "mimickit-g1-mujoco-wasm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "node copy-ort-wasm.mjs && node copy-mujoco-wasm.mjs",
+    "dev": "vite --host 0.0.0.0",
+    "prebuild": "node copy-ort-wasm.mjs && node copy-mujoco-wasm.mjs",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@mujoco/mujoco": "^3.4.0",
+    "onnxruntime-web": "1.21.0",
+    "three": "0.170.0",
+    "lil-gui": "0.19.2"
+  },
+  "devDependencies": {
+    "vite": "6.2.0"
+  },
+  "overrides": {
+    "rollup": "4.68.3"
+  }
+}

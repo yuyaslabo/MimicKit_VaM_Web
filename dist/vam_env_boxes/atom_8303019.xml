@@ -1,0 +1,12 @@
+<mujoco model="vam_atom_8303019">
+  <worldbody>
+    <body name="vam_atom_8303019" pos="10 10 10">
+      <freejoint name="root"/>
+      <geom name="collider_0" type="box" pos="0.0005004 0.0000002 0.0205856" quat="1.00000000 0.00000000 0.00000000 0.00000000" size="0.0225000 0.8300006 0.3800000" mass="2000.0000000" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_1" type="box" pos="-0.1007996 -0.7201000 -0.3771744" quat="0.77932835 -0.03905334 0.62348961 0.04881456" size="0.0075000 0.0150000 0.0800001" mass="2000.0000000" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_2" type="box" pos="0.0980005 -0.7201000 -0.3771744" quat="0.77932867 -0.03905185 -0.62348946 -0.04881271" size="0.0075000 0.0150000 0.0800001" mass="2000.0000000" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_3" type="box" pos="0.1008003 0.7201008 -0.3771744" quat="-0.04881456 -0.62348961 -0.03905334 0.77932835" size="0.0075000 0.0150000 0.0800001" mass="2000.0000000" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_4" type="box" pos="-0.0979998 0.7201008 -0.3771744" quat="0.04881271 0.62348946 -0.03905185 0.77932867" size="0.0075000 0.0150000 0.0800001" mass="2000.0000000" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+    </body>
+  </worldbody>
+</mujoco>

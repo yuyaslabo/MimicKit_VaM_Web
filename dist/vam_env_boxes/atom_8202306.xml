@@ -1,0 +1,13 @@
+<mujoco model="vam_atom_8202306">
+  <worldbody>
+    <body name="vam_atom_8202306" pos="10 10 10">
+      <freejoint name="root"/>
+      <geom name="collider_1" type="box" pos="-0.0124259 0.0015004 0.1056000" quat="1.00000000 0.00000000 0.00000000 0.00000000" size="0.2600002 0.7600005 0.1880000" mass="1666.6666667" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_2" type="box" pos="0.2555745 0.0015004 0.1032000" quat="1.00000000 0.00000000 0.00000000 0.00000000" size="0.0075000 0.7600005 0.1680000" mass="1666.6666667" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_3" type="box" pos="-0.0124259 -0.7725002 0.0000000" quat="1.00000000 0.00000000 0.00000000 0.00000000" size="0.2600002 0.0125000 0.2940000" mass="1666.6666667" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_4" type="box" pos="-0.0124259 0.7725011 0.0000000" quat="1.00000000 0.00000000 0.00000000 0.00000000" size="0.2600002 0.0125000 0.2940000" mass="1666.6666667" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_5" type="box" pos="0.2633691 -0.0403216 0.1648000" quat="0.98480775 0.00000000 0.00000000 0.17364819" size="0.0060000 0.0100000 0.0640000" mass="1666.6666667" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+      <geom name="collider_6" type="box" pos="0.2633693 0.0433226 0.1648000" quat="0.98480775 0.00000000 0.00000000 -0.17364819" size="0.0060000 0.0100000 0.0640000" mass="1666.6666667" rgba="0.6 0.7 0.3 0.5" contype="1" conaffinity="1"/>
+    </body>
+  </worldbody>
+</mujoco>

@@ -1,0 +1,7 @@
+{
+  "name": "vam-ws-udp-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {"start": "node vam_ws_udp_bridge.cjs"},
+  "dependencies": {"ws": "^8.18.0"}
+}
