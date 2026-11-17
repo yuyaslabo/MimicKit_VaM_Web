@@ -1,0 +1,4 @@
+numpy>=1.26,<3
+scipy>=1.12,<2
+websockets>=14,<17
+pyinstaller>=6.10,<7
