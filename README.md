@@ -70,7 +70,7 @@ The browser runs MuJoCo and ONNX inference; the Windows Bridge does **not** run 
 
 ### Bridge destination IP
 
-The Bridge sends the retargeted humanoid pose to VaM using UDP 9998. Its destination IP can be changed without recompiling the application. Edit `bridge_config.json` next to the Bridge executable [VaM_Web_Bridge.exe]:
+Bridge sends the retargeted humanoid poses to VaM via UDP port 9998. To change the destination IP address, please edit the `bridge_config.json` file, which is located in the same directory as the Bridge executable, `VaM_Web_Bridge.exe`.
 
 ```json
 {
