@@ -12,7 +12,7 @@ The original project uses **Newton** for physics simulation and neural-network i
 
 A lightweight **Windows Bridge** maintains communication with VaM: it retargets the simulated humanoid's pose to VaM control points and relays VR controller, HMD, and furniture data between VaM and the web application. The aim is to preserve the original project's **physical interaction and player-following behavior** while moving simulation and inference to the web.
 
-This is a derivative implementation of the Newton-based project, **not an independent replacement for VaM**. The web application handles physical AI simulation and inference; VaM renders and hosts the interactive character and scene.
+The web application handles physical AI simulation and inference; VaM renders and hosts the interactive character and scene.
 
 ## Architecture
 
@@ -65,9 +65,8 @@ The browser runs MuJoCo and ONNX inference; the Windows Bridge does **not** run 
 1. Install the compatible VaM plugins according to the [original project's instructions](https://github.com/yuyaslabo/MimicKit_VaM). In particular, configure the **character receiver**, **VRHand/HMD sender**, and **furniture synchronization** plugins as needed.
 2. Install and run the **VaM Web Bridge** on the same PC as your browser.
 3. Open **[MimicKit_VaM_Web](https://yuyaslabo.github.io/MimicKit_VaM_Web/)**.
-4. Enable **VaM WebSocket / UDP** and verify that its status displays **Connected**.
-5. Enable **VRHand / HMD sync → Tracking & physics** to use VR tracking and interaction.
-6. Check that the VaM scene origin and plugin network settings match your setup. The original project's scene alignment instructions still apply.
+4. Enable **VaM WebSocket / UDP - Stream enabled** and verify that its status displays **Connected**.
+
 
 ### Bridge destination IP
 
@@ -161,7 +160,7 @@ The build process copies the required MuJoCo WASM and ONNX Runtime WASM/JSEP ass
 - **VRHand/HMD does not track:** Verify UDP 9999 is reaching the Bridge and **Tracking & physics** is enabled.
 - **Furniture not active:** Check XML filenames, `manifest.json`, UDP 9001, and the **Furniture / XML diagnostics** panel for unmatched IDs.
 - **ONNX or MuJoCo fails to initialize:** Inspect browser console errors, WASM asset paths, and the supplied ONNX file.
-- **Physical behavior differs from Newton:** Newton and MuJoCo have different physics/contact solvers; identical policy inputs and similar servos do not ensure identical trajectories.
+- **Physical behavior differs from Newton:** Because Newton and MuJoCo employ different mechanisms for physics computation and contact solvers, discrepancies arise even when using identical policy inputs or similar servo settings.
 
 ## Project Origin and Credits
 
