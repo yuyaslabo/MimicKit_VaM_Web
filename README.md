@@ -1,43 +1,152 @@
-# MimicKit G1 — MuJoCo WASM / Newton-style General Servo test
+# MimicKit VaM Web
 
-This revision is based on the **confirmed-loading MuJoCo WASM release** (`phase1_mujoco_wasm_fix`). The **existing 241-observation / 29-action `amp_actor.onnx` is unchanged**.
+**Physics-based AI in your browser — with optional Virt-A-Mate (VaM) VR interaction.**
 
-## What changed (only joint control)
+Run an ONNX reinforcement-learning policy on a 29-DoF G1 humanoid inside **MuJoCo WebAssembly**. The simulation runs locally in your browser. With the optional Windows Bridge, you can stream the simulated character into **Virt-A-Mate**, interact through VR controllers, and synchronize furniture collision geometry.
 
-- `public/g1_collision.xml`: Replaced all 29 `<motor>` entries with **29 `<general>` position servos**, one per G1 joint. Each uses `dyntype=none`, `gaintype=fixed`, `biastype=affine`, `gear=1`, `gainprm=Kp`, `biasprm="0 -Kp -Kd"`, `forcelimited=true`, `forcerange="-limit limit"`.
-- `src/main.js`: Removed explicit JS torque PD and replaced it with `data.ctrl[actuatorId]=targetAngle`; MuJoCo calculates/clamps actuator torques internally.
-- The Kp/Kd/Force multipliers in GUI now alter `model.actuator_gainprm`, `model.actuator_biasprm`, and `model.actuator_forcerange` for the active built-in servos. When Active Drives is false, Kp and Kd become zero (no drive force).
-- On reset, the initial **29 position targets** are applied before `mj_forward`, rather than zeroing the controls.
-- ONNX inference, 241D observation construction, 29D output mapping, GUI targets, `1/240s` simulation step, timestep integration, collision geometry, inertia, contact settings, and WebAssembly asset loading are retained.
-- Joint passive stiffness/damping stays disabled to avoid duplication. Existing MJCF `frictionloss` remains.
+**[Launch Web App](https://yuyaslabo.github.io/MimicKit_VaM_Web/)** · **[GitHub Repository](https://github.com/yuyaslabo/MimicKit_VaM_Web)** · **[Releases](https://github.com/yuyaslabo/MimicKit_VaM_Web/releases)**
 
-## Setup
+> **Experimental project.** Browser behavior, frame rate, and VR integration depend on the device, browser, and scene. The browser demo does not require VaM or the Python Bridge.
 
-1. Preserve your existing `public/amp_actor.onnx` (this ZIP does not include it).
-2. Replace the previous project contents with this archive, then copy `amp_actor.onnx` into `public/`.
-3. Stop Vite completely and run `npm install` and `npm run dev`.
-4. Check for `[MuJoCo] Newton-style general position servos: 29; no JS torque PD`.
-5. Start with Kp x1.0, Kd x1.0, Force x1.0 and compare stability and recovery against the previous archive.
+## Features
 
-## Important
+- **Browser-based physics:** MuJoCo WASM runs the humanoid simulation; ONNX Runtime Web executes the trained controller.
+- **29-DoF G1 humanoid:** Newton-style joint position servos with adjustable drive settings.
+- **Real-time controls:** Target position/direction, camera, simulation controls, and optional action-output noise.
+- **VaM pose streaming:** The Windows Bridge converts browser poses into VaM control-point data using the project's retargeting pipeline.
+- **VR interaction:** Tracked left/right controllers and HMD, physical hand interaction, and trigger-based body grabbing.
+- **Right double-trigger:** Point to set a world-fixed facing target; point downward and double-trigger to return to HMD-facing mode.
+- **Left double-trigger:** Toggle between **STAY** (fixed target) and **FOLLOW** (HMD target tracking).
+- **Furniture synchronization:** Load previously registered collider XML files and update furniture positions/orientations from VaM.
+- **Obstacle-aware target placement:** A nearby safe-target search is available; the browser implementation does not reproduce every Newton pathfinding/rescue feature.
 
-MuJoCo native `general` actuators use the same *nominal torque law* as Newton's POS mode, but **the solvers are different**; matching trajectories is not guaranteed. The actuator parameters are applied at each 240Hz physics step, while NN inference is at 30Hz. Actual browser runtime has not been tested in this environment.
+## 1. Try the Web Demo
 
-## MuJoCo actuator control-range fix
+Open **https://yuyaslabo.github.io/MimicKit_VaM_Web/** in a desktop browser that supports WebAssembly and WebGL.
 
-Removed inherited `<motor ctrllimited="true"/>` from `<default>` and set `ctrllimited="false"` on all 29 general position servos. `forcerange` remains enabled for torque limits. This corrects `invalid control range for actuator` on model load; policy, physics, and PD gains are unchanged.
+The app runs the G1 simulation in-browser. No Python, Conda, or Virt-A-Mate installation is necessary for this standalone mode. The first launch may take longer while the ONNX model, WASM runtimes, and character assets load.
 
+Use the on-screen GUI to inspect the policy, adjust targets, change camera/physics settings, or enable action noise. Performance depends on browser and hardware; WASM execution does not imply GPU-accelerated neural-network inference.
 
-## Newton G1 appearance baseline (STL)
+## 2. Connect to Virt-A-Mate (Windows)
 
-- Imported exactly **36** unique STL files used by **36** visual mesh geoms in the original training `g1.xml` supplied in `g1.zip`.
-- The existing `public/g1_collision.xml` is UNCHANGED and still governs all MuJoCo simulation, collision, mass, inertia, friction and 29 general-servo actuators.
-- At boot, `src/main.js` reads `public/g1.xml` as a **visual-only manifest**, fetches `public/meshes/*.STL`, attaches them to the appropriate MuJoCo body display groups, and uses per-geom MJCF position, quaternion and RGBA.
-- `G1 Appearance (STL)` controls allow hiding STL and revealing collision capsules for inspection. STL meshes are never added to MuJoCo's collision system.
-- Keep `public/amp_actor.onnx` from your previous working install (not included). Run `npm install`, `npm run dev`.
-- The visual model is based on raw STL positions in body-local MJCF coordinates. If a mesh offset appears, compare with the original MuJoCo mesh asset reference transformation; physics behavior is unaffected.
+**Requirements:**
 
+- A working installation of **Virt-A-Mate** and the compatible VaM receiver/sender plugins from the [Newton/VaM integration project](https://github.com/yuyaslabo/VaM_Physical_AI_from_Mimickit).
+- The **VaM Web Bridge** on the PC running the browser (Windows EXE/installer when available in [Releases](https://github.com/yuyaslabo/MimicKit_VaM_Web/releases)).
+- Network access enabled for the VaM plugins, with the appropriate firewall rules if using separate PCs.
 
-## npm registry rollback safeguard
+**Setup:**
 
-Rollup is pinned to 4.68.3 under `overrides` and Vite to 6.2.0 to avoid npm resolving a missing tarball. If a stale local `package-lock.json` refers to rollup 4.68.5, remove the lockfile and install again.
+1. Install or extract the VaM Web Bridge and launch `VaM_Web_Bridge.exe`.
+2. Open the [Web App](https://yuyaslabo.github.io/MimicKit_VaM_Web/) on the **same PC as the Bridge**.
+3. In the app, enable **VaM WebSocket / UDP** streaming and check that its status becomes **Connected**.
+4. Enable **VRHand / HMD sync → Tracking & physics** to use tracked controllers and the HMD.
+5. In VaM, configure the matching receiver, VRHand, and furniture-sync plugins. Align the VaM scene origin with the simulation as described in the original integration project's setup instructions.
+
+### Network ports
+
+| Port | Direction | Purpose |
+| --- | --- | --- |
+| TCP 8765 | Browser → local Bridge (WebSocket) | Simulated pose data and VR/furniture forwarding |
+| UDP 9998 | Bridge → VaM | Retargeted control-point poses |
+| UDP 9999 | VaM → Bridge | Left/right VR controllers, triggers, and HMD tracking |
+| UDP 9001 | VaM → Bridge | Furniture Atom position/orientation updates |
+
+**UDP 9002 is not needed by the Web version.** Furniture shapes are loaded from pre-existing XML assets rather than registered live.
+
+### Set a different VaM destination IP
+
+Edit `bridge_config.json` next to the Bridge executable, then restart the Bridge:
+
+```json
+{
+  "udp_host": "127.0.0.1"
+}
+```
+
+For a two-PC setup, replace `127.0.0.1` with the IP address of the **VaM PC**. This setting changes the UDP 9998 destination; it does not change the Bridge's local WebSocket listener.
+
+> **Browser security:** The hosted page uses HTTPS while the Bridge uses a local `ws://` connection. Browser permissions and security policies vary. If the page works but Bridge connection fails, check the browser's local-network access policy and the Bridge console before changing the retargeting configuration.
+
+## 3. VR Controller Operations
+
+| Input | Action |
+| --- | --- |
+| Hold a trigger near the humanoid | Grab and physically pull a nearby body |
+| Left double-trigger (when not grabbing) | Switch **STAY ↔ FOLLOW** |
+| Right double-trigger (when not grabbing) | Set a world-fixed direction to face using the controller pointing direction |
+| Right downward double-trigger | Clear the fixed direction and face the HMD again |
+
+Hand positions are physically tracked with position-PD control; their orientations follow the tracked controller orientation. HMD tracking is also used to estimate a torso collider and target/facing directions.
+
+In **FOLLOW** mode, HMD motion updates the target. A local safe-target search attempts to keep the goal near the character (typically within 1 m), while avoiding registered furniture. In **STAY** mode, the target remains fixed and HMD-driven recovery/avoidance is bypassed.
+
+## 4. Furniture Collision Assets
+
+The Web app uses already registered Newton-style compound-collider MJCF assets (`atom_<ID>.xml`), typically stored under:
+
+```text
+public/vam_env_boxes/
+  manifest.json
+  atom_11967007.xml
+  atom_....xml
+```
+
+The Atom ID in each filename must match the ID transmitted by the VaM furniture-sync plugin on UDP 9001. Furniture poses update at runtime, but **new shapes or scale changes require regenerating the XML assets and rebuilding/redeploying the Web app**. The current collider representation uses oriented boxes; curved meshes are not reproduced as exact curved surfaces.
+
+Use **Furniture / XML diagnostics** in the GUI to inspect registered XML IDs, received IDs, unmatched IDs, and active colliders.
+
+> **Privacy / publishing:** Do not publish scene-specific furniture assets, scene data, or third-party models unless you have permission to distribute them.
+
+## 5. Run Locally / Develop
+
+Install a supported Node.js LTS version, then run:
+
+```bash
+npm install
+npm run dev
+```
+
+Build and preview the production version:
+
+```bash
+npm run build
+npm run preview
+```
+
+The `prebuild` step copies the local MuJoCo and ONNX Runtime WASM/JSEP runtime assets into `public/`. The Vite `base` setting is configured for the GitHub Pages repository path `/MimicKit_VaM_Web/`. If you deploy under a different repository name or domain, update `base` accordingly.
+
+### Key project files
+
+| Location | Purpose |
+| --- | --- |
+| `src/main.js` | MuJoCo simulation, ONNX inference, GUI, and main loop |
+| `src/vam_vr_web.js` | VR tracking, hand physics, and grab/facing controls |
+| `src/vam_target_web.js` | HMD target tracking and STAY/FOLLOW behavior |
+| `src/vam_furniture_web.js` | Furniture pose sync and XML-based colliders |
+| `src/vam_raw_pose_ws.js` | Bridge WebSocket communication |
+| `public/g1_collision.xml` | Humanoid physics model and collision geometry |
+| `public/g1.xml` / `public/meshes/` | G1 appearance assets |
+| `public/amp_actor.onnx` | Trained policy (if included in your distribution) |
+
+Some paths may vary between revisions; check the actual repository tree before modifying the app.
+
+## 6. Troubleshooting
+
+- **App loads, but the character does not move:** Inspect the browser console for ONNX/WASM loading errors and confirm that required model assets exist under the configured Vite base path.
+- **Bridge does not connect:** Confirm the Bridge is running, the browser's **VaM WebSocket / UDP** status shows **Connected**, and TCP port 8765 is available on the browser PC.
+- **VaM receives no poses:** Confirm UDP 9998 destination IP and VaM plugin networking permissions.
+- **VR hands/HMD not moving:** Verify UDP 9999 transmission and enable **Tracking & physics**.
+- **Furniture missing:** Use **Furniture / XML diagnostics**. Check registered IDs against received IDs, and confirm UDP 9001 data reaches the Bridge.
+- **Different behavior than Newton:** MuJoCo and Newton use different physics implementations. Similar actuator settings do not guarantee identical trajectories or contact responses.
+
+## 7. Project Background and Credits
+
+This is an independent experimental Web/VaM integration built around a policy trained with **[MimicKit](https://github.com/xbpeng/MimicKit)** and simulated in **[MuJoCo](https://mujoco.org/)**, with inference via **[ONNX Runtime Web](https://onnxruntime.ai/)**.
+
+The original Newton-based VaM integration is maintained separately at **[VaM_Physical_AI_from_Mimickit](https://github.com/yuyaslabo/VaM_Physical_AI_from_Mimickit)**.
+
+MimicKit and other upstream assets retain their respective copyrights and licenses. Check the repository's `LICENSE` and the licenses of bundled models, meshes, and dependencies before redistribution. No license for original project content is asserted by this README.
+
+**Developer:** [LocalAIVRLab / yuyaslabo](https://github.com/yuyaslabo)
