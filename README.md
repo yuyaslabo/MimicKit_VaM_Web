@@ -62,7 +62,10 @@ The browser runs MuJoCo and ONNX inference; the Windows Bridge does **not** run 
 
 ## Setup — Connect to VaM
 
-1. Install the compatible VaM plugins according to the [original project's instructions](https://github.com/yuyaslabo/MimicKit_VaM). In particular, configure the **character receiver**, **VRHand/HMD sender**, and **furniture synchronization** plugins as needed.
+1. Install the compatible VaM plugins.
+    - `Receiver_mimickit_public.cs` — **Person plugin** for receiving AI character motion.
+    - `VRhand_mimickit_public.cs` — **Scene plugin** for VR controller/HMD data and controls.
+    - `Atom_sync_mimickit_public.cs` — **Scene plugin** for furniture Atom transform and collider shape synchronization.
 2. Install and run the **VaM Web Bridge** on the same PC as your browser.
 3. Open **[MimicKit_VaM_Web](https://yuyaslabo.github.io/MimicKit_VaM_Web/)**.
 4. Enable **VaM WebSocket / UDP - Stream enabled** and verify that its status displays **Connected**.
