@@ -173,4 +173,4 @@ Core technologies include **[MuJoCo](https://mujoco.org/)**, **[ONNX Runtime Web
 
 This is an unofficial community project and is not affiliated with the upstream projects or Virt-A-Mate's developers. Refer to the upstream repositories and applicable licenses for copyright and redistribution requirements.
 
-**Developed by [LocalAIVRLab / yuyaslabo](https://github.com/yuyaslabo).**
+**Developed by [AIVRLab / yuyaslabo](https://github.com/yuyaslabo).**
