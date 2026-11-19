@@ -62,7 +62,7 @@ The browser runs MuJoCo and ONNX inference; the Windows Bridge does **not** run 
 
 ## Setup — Connect to VaM
 
-1. Install the compatible VaM plugins.
+1. Load the following plugins in Virt-A-Mate.
     - `Receiver_mimickit_public.cs` — **Person plugin** for receiving AI character motion.
     - `VRhand_mimickit_public.cs` — **Scene plugin** for VR controller/HMD data and controls.
     - `Atom_sync_mimickit_public.cs` — **Scene plugin** for furniture Atom transform and collider shape synchronization.
